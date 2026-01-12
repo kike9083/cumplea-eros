@@ -91,3 +91,26 @@ export const getExpenses = async (): Promise<Expense[]> => {
     if (error) throw error;
     return data || [];
 };
+
+export const addExpense = async (expense: Omit<Expense, 'id'>): Promise<Expense> => {
+    const { data, error } = await supabase.from('expenses').insert([expense]).select().single();
+    if (error) throw error;
+    return data;
+};
+
+export const deleteExpense = async (id: string): Promise<void> => {
+    const { error } = await supabase.from('expenses').delete().eq('id', id);
+    if (error) throw error;
+};
+
+export const getEventPhotos = async (): Promise<EventPhoto[]> => {
+    const { data, error } = await supabase.from('event_photos').select('*');
+    if (error) throw error;
+    return data || [];
+};
+
+export const addEventPhoto = async (photo: Omit<EventPhoto, 'id'>): Promise<EventPhoto> => {
+    const { data, error } = await supabase.from('event_photos').insert([photo]).select().single();
+    if (error) throw error;
+    return data;
+};
