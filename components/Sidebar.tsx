@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Wallet, Image, Settings, Sun, Users } from 'lucide-react';
+import { LayoutDashboard, Wallet, Image, Settings, Sun, Users, Calendar } from 'lucide-react';
 import { ViewState } from '../types';
 
 interface SidebarProps {
@@ -10,6 +10,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'calendar', label: 'Calendario', icon: Calendar },
     { id: 'collaborators', label: 'Colaboradores', icon: Users },
     { id: 'treasurer', label: 'Tesorero', icon: Wallet },
     { id: 'gallery', label: 'Social & Transparencia', icon: Image },
@@ -22,7 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
         <Sun className="w-8 h-8 mr-2 animate-spin-slow" />
         <h1 className="text-2xl font-bold tracking-tight">AlohaFunds</h1>
       </div>
-      
+
       <nav className="flex-1 p-4 space-y-2">
         {menuItems.map((item) => {
           const Icon = item.icon;
@@ -31,11 +32,10 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
             <button
               key={item.id}
               onClick={() => setView(item.id as ViewState)}
-              className={`w-full flex items-center p-3 rounded-xl transition-all duration-300 ${
-                isActive 
-                  ? 'bg-tropical-light text-tropical-sea font-bold shadow-sm' 
+              className={`w-full flex items-center p-3 rounded-xl transition-all duration-300 ${isActive
+                  ? 'bg-tropical-light text-tropical-sea font-bold shadow-sm'
                   : 'text-gray-500 hover:bg-gray-50 hover:text-tropical-teal'
-              }`}
+                }`}
             >
               <Icon className={`w-5 h-5 mr-3 ${isActive ? 'text-tropical-sunset' : ''}`} />
               {item.label}

@@ -37,4 +37,4 @@ export interface EventPhoto {
   descripcion: string;
 }
 
-export type ViewState = 'dashboard' | 'collaborators' | 'treasurer' | 'gallery' | 'settings';
+export type ViewState = 'dashboard' | 'calendar' | 'collaborators' | 'treasurer' | 'gallery' | 'settings';

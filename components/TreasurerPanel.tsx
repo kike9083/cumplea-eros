@@ -10,8 +10,17 @@ interface TreasurerPanelProps {
 }
 
 const TreasurerPanel: React.FC<TreasurerPanelProps> = ({ employees, payments, config, onTogglePayment }) => {
-  const [currentDay] = useState(new Date().getDate());
-  
+  const [currentDate] = useState(new Date());
+  const currentDay = currentDate.getDate();
+  const currentMonth = currentDate.getMonth() + 1; // 1-12
+  const currentYear = currentDate.getFullYear();
+
+  const monthNames = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  ];
+  const currentMonthName = monthNames[currentDate.getMonth()];
+
   // Logic for Alerts
   const isWarningDay = [13, 28].includes(currentDay);
   const isCollectionDay = [14, 15, 29, 30].includes(currentDay);
@@ -20,19 +29,19 @@ const TreasurerPanel: React.FC<TreasurerPanelProps> = ({ employees, payments, co
     // Select template based on date (roughly)
     const template = currentDay > 20 ? config.plantilla_dia_30 : config.plantilla_dia_15;
     const message = template
-      .replace('{nombre}', emp.nombre.split(' ')[0])
-      .replace('{monto}', amount.toString());
-    
+      ? template.replace('{nombre}', emp.nombre.split(' ')[0]).replace('{monto}', amount.toString())
+      : `Hola ${emp.nombre}, recuerda tu cuota de ${amount}.`; // Fallback
+
     return `https://wa.me/${emp.telefono}?text=${encodeURIComponent(message)}`;
   };
 
   const getGroupNotice = () => {
     const debtors = employees.filter(e => {
-       const pay = payments.find(p => p.empleado_id === e.id);
-       return !pay?.confirmado;
+      const pay = payments.find(p => p.empleado_id === e.id && p.mes === currentMonth && p.anio === currentYear);
+      return !pay?.confirmado;
     });
-    
-    return `*Aviso Grupal - AlohaFunds 🌺*\n\nHola equipo, faltan los siguientes pagos para el fondo:\n${debtors.map(d => `- ${d.nombre}`).join('\n')}\n\n¡Ayúdennos a llegar a la playa! 🏖️`;
+
+    return `*Aviso Grupal - AlohaFunds 🌺*\n\nHola equipo, faltan los siguientes pagos para el fondo de ${currentMonthName}:\n${debtors.map(d => `- ${d.nombre}`).join('\n')}\n\n¡Ayúdennos a llegar a la playa! 🏖️`;
   };
 
   const copyToClipboard = (text: string) => {
@@ -63,8 +72,8 @@ const TreasurerPanel: React.FC<TreasurerPanelProps> = ({ employees, payments, co
       )}
 
       <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm">
-        <h2 className="text-xl font-bold text-gray-800">Gestión de Pagos (Octubre)</h2>
-        <button 
+        <h2 className="text-xl font-bold text-gray-800">Gestión de Pagos ({currentMonthName})</h2>
+        <button
           onClick={() => copyToClipboard(getGroupNotice())}
           className="flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-sm font-medium"
         >
@@ -85,7 +94,7 @@ const TreasurerPanel: React.FC<TreasurerPanelProps> = ({ employees, payments, co
           </thead>
           <tbody className="divide-y divide-gray-100">
             {employees.map(emp => {
-              const payment = payments.find(p => p.empleado_id === emp.id);
+              const payment = payments.find(p => p.empleado_id === emp.id && p.mes === currentMonth && p.anio === currentYear);
               const isPaid = payment?.confirmado || false;
 
               return (
@@ -95,20 +104,18 @@ const TreasurerPanel: React.FC<TreasurerPanelProps> = ({ employees, payments, co
                     <div className="text-xs text-gray-500">{emp.email}</div>
                   </td>
                   <td className="p-4 text-center">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      isPaid ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                    }`}>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${isPaid ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      }`}>
                       {isPaid ? 'Pagado' : 'Pendiente'}
                     </span>
                   </td>
                   <td className="p-4 text-center">
                     <button
                       onClick={() => onTogglePayment(emp.id)}
-                      className={`p-2 rounded-full transition-all ${
-                        isPaid 
-                          ? 'bg-green-50 text-green-600 hover:bg-red-50 hover:text-red-600' 
+                      className={`p-2 rounded-full transition-all ${isPaid
+                          ? 'bg-green-50 text-green-600 hover:bg-red-50 hover:text-red-600'
                           : 'bg-gray-100 text-gray-400 hover:bg-green-50 hover:text-green-600'
-                      }`}
+                        }`}
                       title={isPaid ? "Marcar como pendiente" : "Marcar como pagado"}
                     >
                       {isPaid ? <CheckCircle2 className="w-6 h-6" /> : <div className="w-6 h-6 border-2 border-gray-300 rounded-full" />}
