@@ -20,6 +20,7 @@ export const INITIAL_CONFIG: Config = {
   cuota_mensual: 200,
   plantilla_dia_15: "¡Aloha {nombre}! 🌺 Hoy es 15, día de ponerle sabor al fondo. Son ${monto} para los pasteles y el hotel 5 estrellas. ¡No seas aguafiestas!",
   plantilla_dia_30: "¡Hey {nombre}! 🌊 Se acaba el mes y el mar nos espera. Por favor deposita tu cuota de ${monto} para no nadar con los tiburones.",
+  meta_resort: 1000,
 };
 
 export const MOCK_EXPENSES: Expense[] = [

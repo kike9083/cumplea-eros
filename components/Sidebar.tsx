@@ -17,9 +17,10 @@ interface SidebarProps {
   currentView: ViewState;
   setView: (view: ViewState) => void;
   user: any; // User object from Supabase or null for Guest
+  resortProgress: number;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, user }) => {
+const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, user, resortProgress }) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'calendar', label: 'Calendario', icon: Calendar },
@@ -95,9 +96,9 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, user }) => {
           <div className="relative z-10">
             <p className="text-[10px] font-black uppercase opacity-80 mb-1">Meta Playa 🏖️</p>
             <div className="w-full bg-white/30 h-1.5 rounded-full overflow-hidden">
-              <div className="bg-white h-full" style={{ width: '45%' }}></div>
+              <div className="bg-white h-full transition-all duration-1000" style={{ width: `${resortProgress}%` }}></div>
             </div>
-            <p className="text-[10px] font-bold mt-2">45% Completado</p>
+            <p className="text-[10px] font-bold mt-2">{resortProgress}% Completado</p>
           </div>
           {/* Aesthetic circle */}
           <div className="absolute top-[-20px] right-[-20px] w-20 h-20 bg-white/10 rounded-full blur-xl"></div>

@@ -26,6 +26,7 @@ CREATE TABLE config (
   cuota_mensual DECIMAL(10, 2) NOT NULL DEFAULT 20.00,
   plantilla_dia_15 TEXT,
   plantilla_dia_30 TEXT,
+  meta_resort DECIMAL(10, 2) NOT NULL DEFAULT 1000.00,
   CHECK (id = 1)
 );
 

@@ -197,6 +197,15 @@ const App: React.FC = () => {
     }
   };
 
+  // Resort Progress Calculation
+  const resortFund = payments
+    .filter(p => p.confirmado)
+    .reduce((acc, curr) => acc + Math.max(0, curr.monto_pagado - 3), 0);
+
+  const resortProgress = config.meta_resort > 0
+    ? Math.min(100, Math.round((resortFund / config.meta_resort) * 100))
+    : 0;
+
   // Render Logic
   if (authLoading) {
     return (
@@ -280,6 +289,7 @@ const App: React.FC = () => {
           currentView={currentView}
           setView={(v) => { setView(v); setIsMobileMenuOpen(false); }}
           user={session?.user}
+          resortProgress={resortProgress}
         />
       </div>
 

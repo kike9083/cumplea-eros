@@ -64,6 +64,19 @@ const Settings: React.FC<SettingsProps> = ({ config, onSave }) => {
             />
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Meta Resort Total ($) 🏖️
+            </label>
+            <input
+              type="number"
+              name="meta_resort"
+              value={formData.meta_resort}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-tropical-sea focus:border-transparent outline-none transition-shadow"
+            />
+          </div>
+
           <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
             <h4 className="text-sm font-bold text-blue-800 mb-2">Variables Disponibles</h4>
             <p className="text-xs text-blue-600">

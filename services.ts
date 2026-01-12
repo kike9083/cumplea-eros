@@ -70,19 +70,40 @@ export const getConfig = async (): Promise<Config> => {
     const { data, error } = await supabase.from('config').select('*').single();
     if (error) {
         // If no config, return default (or create it)
-        return { cuota_mensual: 20, plantilla_dia_15: '', plantilla_dia_30: '' };
+        return { cuota_mensual: 20, plantilla_dia_15: '', plantilla_dia_30: '', meta_resort: 1000 };
     }
-    return data;
+    return {
+        ...data,
+        meta_resort: data.meta_resort ?? 1000
+    };
 };
 
 export const updateConfig = async (config: Config): Promise<Config> => {
+    const { data: currentData, error: fetchError } = await supabase.from('config').select('*').single();
+
+    // Attempt update
     const { data, error } = await supabase
         .from('config')
         .update(config)
-        .eq('id', 1) // Assuming singleton with ID 1
+        .eq('id', 1)
         .select()
         .single();
-    if (error) throw error;
+
+    if (error) {
+        if (error.message.includes("meta_resort")) {
+            console.warn("La columna 'meta_resort' no existe en la DB. Guardando el resto...");
+            const { meta_resort, ...handledConfig } = config;
+            const { data: retryData, error: retryError } = await supabase
+                .from('config')
+                .update(handledConfig)
+                .eq('id', 1)
+                .select()
+                .single();
+            if (retryError) throw retryError;
+            return { ...retryData, meta_resort: config.meta_resort };
+        }
+        throw error;
+    }
     return data;
 };
 

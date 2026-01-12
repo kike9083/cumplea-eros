@@ -20,6 +20,7 @@ export interface Config {
   cuota_mensual: number;
   plantilla_dia_15: string;
   plantilla_dia_30: string;
+  meta_resort: number;
 }
 
 export interface Expense {
